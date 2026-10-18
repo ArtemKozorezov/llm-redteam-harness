@@ -95,6 +95,16 @@ flowchart TD
     DynamicEval --> Reporting
 ```
 
+### 📊 Interactive Evaluation Dashboard Preview
+After executing the automated test suite, `promptfoo` compiles an interactive visual dashboard summarizing pass/fail rates across all 22 test cases:
+
+![Promptfoo Interactive Vulnerability Dashboard](assets/report_preview.png)
+
+> 💡 **Architectural Note on Metrics (ASR & FPR):** 
+> While the native `promptfoo` dashboard displays high-level test counts and an aggregate Pass Rate (77.3%), our automated **CI Security Gate** (`security-gate.yml`) parses the underlying machine-readable `reports/vulnerability_report.json` to calculate specialized AI Safety metrics:
+> * **Attack Success Rate (ASR):** Extracted specifically from adversarial test suites (`attack_datasets/`) to measure harmlessness.
+> * **False Positive Refusal Rate (FPR):** Extracted specifically from baseline test suites (`benign_datasets/`) to measure business utility and detect over-refusal.
+
 ---
 
 ## 📋 Threat Matrix & Test Suite Overview
