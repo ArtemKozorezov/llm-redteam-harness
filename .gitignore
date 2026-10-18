@@ -1,0 +1,45 @@
+# === 1. Приватні ключі та секрети ===
+.env
+*.pem
+*.key
+
+# === 2. Віртуальне середовище Python ===
+venv/
+.venv/
+env/
+ENV/
+
+# === 3. КЕШІ ТА СИСТЕМНІ ФАЙЛИ PYTHON ===
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# === 4. КЕШІ ТА ЗАЛЕЖНОСТІ NODE.JS / PROMPTFOO ===
+node_modules/
+.promptfoo/
+promptfoo_cache/
+
+# === 5. ТЕМПЧАСОВІ ТА ЗГЕНЕРОВАНІ ЗВІТИ ===
+# Ігноруємо всі тимчасові та згенеровані звіти у reports
+reports/*
+
+# Але примусово зберігаємо .gitkeep та зразки/еталонні звіти
+!reports/.gitkeep
+!reports/sample_vulnerability_report.html
+!reports/modelscan-report.txt
+!reports/fickling-report.txt
+
+# === 6. ЛОКАЛЬНІ ML-АРТЕФАКТИ ТА ТЕМПЧАСОВІ ФАЙЛИ ===
+# Ігноруємо великі файли моделей у папці models/
+models/*
+
+# Але ПРИМУСОВО зберігаємо наш фіктивний класифікатор та .gitkeep
+!models/legacy_classifier.pkl
+!models/.gitkeep
+
+# === 7. ФАЙЛИ ОПЕРАЦІЙНОЇ СИСТЕМИ ТА IDE ===
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

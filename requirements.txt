@@ -1,0 +1,5 @@
+# AI Security & Red-Teaming Evaluation Suite
+
+# Статичні сканери артефактів моделей (OWASP LLM04: Supply Chain)
+modelscan>=0.8.0
+fickling
