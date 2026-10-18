@@ -1,0 +1,58 @@
+name: AI Security and Red-Teaming Gate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Дозволяє запускати тести вручну через інтерфейс GitHub
+
+jobs:
+  red-teaming-eval:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install System Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        npm install -g promptfoo # Встановлюємо promptfoo глобально
+
+    - name: Download Dummy Model Artifact for Scanning
+      run: |
+        mkdir -p ./models
+        # Завантажуємо фіктивний вразливий файл для демонстрації перевірки Supply Chain
+        wget -qO ./models/legacy_classifier.pkl https://raw.githubusercontent.com/mmaitre314/picklescan/main/tests/data/malicious.pkl
+
+    - name: Execute Model Security Scan (Static)
+      env:
+        PYTHONUTF8: 1
+        PYTHONIOENCODING: utf-8
+      run: |
+        mkdir -p reports
+        # Пошук шкідливого коду в файлах моделей та перевірка безпеки конфігурацій
+        modelscan -p ./models/ > reports/modelscan-report.txt || true 
+        fickling ./models/legacy_classifier.pkl >> reports/fickling-report.txt || true 
+
+    - name: Execute Promptfoo Red-Teaming (Dynamic)
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        NODE_NO_WARNINGS: 1
+      run: |
+        # Запуск соціотехнічних атак на HR-Copilot через API
+        promptfoo eval --config promptfooconfig.yaml -o reports/vulnerability_report.html -o reports/vulnerability_report.json
+
+    - name: Upload Security Reports as Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ai-security-reports
+        path: reports/
